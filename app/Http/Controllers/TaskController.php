@@ -15,7 +15,9 @@ class TaskController extends Controller
         if (Gate::allows('admin')) {
 
             // We can use pagination
-            $tasks = Task::where('status', '!=', 'closed')->get();
+            $tasks = Task::where('status', '!=', 'closed')
+                ->WithLastActivity()
+                ->get();
 
             return view('task.list', compact('tasks'));
         }
@@ -56,7 +58,7 @@ class TaskController extends Controller
     {
         if (Gate::allows('admin')) {
 
-            $task = Task::whereId($task)->with('comments')->first();
+            $task = Task::whereId($task)->with('comments.user')->first();
 
             return view('task.show', compact('task'));
         }
